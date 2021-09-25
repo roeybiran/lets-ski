@@ -1,0 +1,8 @@
+{
+  "files.watcherExclude": {
+    "resorts.*": true
+  },
+  "search.exclude": {
+    "resorts.*": true
+  }
+}

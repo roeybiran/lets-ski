@@ -1,36 +1,43 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
-import { getAllResorts } from "../lib/resortsParser";
 import { GetStaticProps } from "next";
-import Resort from "../lib/Resort";
+import dynamic from "next/dynamic";
+import { useEffect } from "react";
 
-export default function Home({ resortsData }: { resortsData: Resort[] }) {
+const Canvas = dynamic(() => import("../components/Canvas"), { ssr: false });
+
+export default function Page() {
+  useEffect(() => {
+    fetch("/api/search");
+  });
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
-        <title>Let's Ski!</title>
+        <title>Let’s Ski!</title>
       </Head>
-
-      <header>
-        <h1 className={styles.title}>Let's Ski!</h1>
-
-        <p className={styles.description}>
-          Get started by typing the name of any continent, country, city, resort
-          or area.
+      <main>
+        <header>
+          <h1>Let’s Ski!</h1>
+        </header>
+        <p></p>
+        <label htmlFor="search-field">
+          Search for ski resorts by name, continent, country, city or area:
+        </label>
+        <input
+          list="resorts"
+          id="search-field"
+          type="search"
+          placeholder="e.g. ”Italy“ or “Val Thorens”"
+        />
+        <datalist id="resorts">
+          <option value="france" />
+        </datalist>
+        <Canvas />
+      </main>
+      <footer>
+        <p>
+          By <a href="https://github.com/roeybiran">Roey Biran</a> and May
+          Rosner
         </p>
-      </header>
-      <main className={styles.main}></main>
-
-      <footer className={styles.footer}>
-        By&nbsp;
-        <a
-          href="https://github.com/roeybiran"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Roey Biran
-        </a>
-        &nbsp;&amp; May Rosner
       </footer>
     </div>
   );
