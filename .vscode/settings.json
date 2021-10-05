@@ -1,11 +1,11 @@
 {
   "files.exclude": {
-    "resorts.*": true,
+    "**/resorts.json": true
   },
   "files.watcherExclude": {
-    "resorts.*": true
+    "**/resorts.json": true
   },
   "search.exclude": {
-    "resorts.*": true
+    "**/resorts.json": true
   }
 }

@@ -12,31 +12,31 @@ const makeScene = (
   ref: MutableRefObject<HTMLDivElement | null>
 ) => {
   const scene = (p: P5) => {
-    const width = document.body.clientWidth;
-    const height = p.windowHeight;
-    const maxMountainHeight = (height / 3) * 2;
-    const maxMountainWidth = width / 2;
+    const canvasWidth = document.body.clientWidth;
+    const canvasHeight = p.windowHeight;
+    const maxMountainHeight = (canvasHeight / 3) * 2;
+    const maxMountainWidth = canvasWidth / 2;
 
-    const renderedResorts = prepareResortsForRender(resorts);
+    const renderedResorts = prepareResortsForRender({
+      p,
+      resorts,
+      canvasWidth,
+      canvasHeight,
+      maxMountainHeight,
+    });
 
     p.setup = () => {
-      const cnv = p.createCanvas(width, height);
+      const cnv = p.createCanvas(canvasWidth, canvasHeight);
       cnv.style("display", "block");
     };
 
     p.windowResized = () => {
-      p.resizeCanvas(width, height);
+      p.resizeCanvas(canvasWidth, canvasHeight);
     };
 
     p.draw = () => {
       // snowflakes(p);
-      mountains(
-        p,
-        renderedResorts,
-        maxMountainWidth,
-        maxMountainHeight,
-        height
-      );
+      mountains(p, renderedResorts);
     };
   };
 

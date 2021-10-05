@@ -1,5 +1,6 @@
 import normalize from "../util/normalize";
-import resorts from "./resorts.json";
+// import resorts from "./resorts.json";
+import resorts from "./_resorts.json";
 import toTitleCase from "../util/toTitleCase";
 
 const RANKING_CRITERIA = [
@@ -50,7 +51,7 @@ function parseResorts(jsonStr: any) {
         }: any,
         i: number
       ) => {
-        const name = toTitleCase((r["Resort Name"] ?? "").replace(/-/g, " "));
+        const name = r["Resort Name"] ?? "";
         const stateOrProvince = r["State/Province"] ?? "";
         const searchString = normalize(continent + country + stateOrProvince);
         const totalKm = hard + intermediate + easy;
