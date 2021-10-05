@@ -1,90 +1,82 @@
-// @ts-ignore
-/*
-gets the top 5 resorts from the raw json,
-fills the required properties for rendering.
-Sorts by descending height.
-*/
+import normalize from "../util/normalize";
+import resorts from "./resorts.json";
+import toTitleCase from "../util/toTitleCase";
 
-import resorts from "./resorts";
-
-function parseJson(json: string) {
-  // return JSON.parse(json).data[0];
-}
+const RANKING_CRITERIA = [
+  "Ski resort size",
+  "Slope offering, variety of runs",
+  "Lifts and cable cars",
+  "Snow reliability",
+  "Slope preparation",
+  "Access, on-site parking",
+  "Orientation (trail map, information boards, sign-postings)",
+  "Cleanliness and hygiene",
+  "Environmentally friendly ski operation",
+  "Friendliness of staff",
+  "Mountain restaurants/ski huts/gastronomy",
+  "Après-ski",
+  "Accommodation offering directly at the slopes and lifts",
+  "Families and children",
+  "Beginners",
+  "Advanced skiers/freeriders",
+  "Snow parks",
+  "Cross-country skiing and trails",
+];
 
 let parsedResorts: Resort[] = [];
 
 export default function getResorts() {
-  // return parseJson()
-  console.log(resorts[0]);
+  if (parsedResorts.length === 0) {
+    parsedResorts = parseResorts(resorts.data);
+  }
+  return parsedResorts;
+}
 
-  //   .filter((resort) => {
-  //     return (
-  //       resort.Altitude > 0 &&
-  //       resort.Easy &&
-  //       resort.Intermediate &&
-  //       resort.Difficult &&
-  //       [resort.Country, resort.Continent]
-  //         .map((x) => x.toLowerCase())
-  //         .includes(query)
-  //     );
-  //   })
-  //   .map((resort) => {
-  //     const hard = resort.Difficult;
-  //     const totalKm = hard + resort.Intermediate + resort.Easy;
-  //     // specicy minimum difficulty in case of lacking data
-  //     const difficulty = hard / totalKm > 0.5 ? hard / totalKm : 0.5;
-  //     let score =
-  //       Object.keys(resort)
-  //         .filter((prop) => {
-  //           return criteria.includes(prop);
-  //         })
-  //         .reduce((prevVal, currVal) => {
-  //           return (resort[prevVal] || 0) + (resort[currVal] || 0);
-  //         }, 0) / criteria.length;
-  //     if (score === 0) {
-  //       score = 0.1;
-  //     }
-  //     return {
-  //       name: resort["Resort Name"].replace(/-/g, " ").toTitleCase(),
-  //       continent: resort.Continent.toLowerCase(),
-  //       country: resort.Country.toLowerCase(),
-  //       altitude: resort.Altitude,
-  //       score,
-  //       difficulty,
-  //     };
-  //   })
-  //   .sort((a, b) => {
-  //     return b.score - a.score;
-  //   })
-  //   .slice(0, 5)
-  //   .calculateRelativeProperties("difficulty")
-  //   .calculateRelativeProperties("altitude")
-  //   .sort((a, b) => {
-  //     return a.altitudeRelative - b.altitudeRelative;
-  //   })
-  //   .reverse()
-  //   // fill colors
-  //   .map((x, idx) => {
-  //     const resort = x;
-  //     const leftFaceColor = COLOR_LEFT_FACE.map((value) => {
-  //       return value - COLOR_DIFF_STEP * idx;
-  //     });
-  //     const rightFaceColor = COLOR_RIGHT_FACE.map((value) => {
-  //       return value - COLOR_DIFF_STEP * idx;
-  //     });
-  //     resort.rightFaceColor = rightFaceColor;
-  //     resort.leftFaceColor = leftFaceColor;
-  //     return resort;
-  //   });
-  // const locations = resorts.map((_, i) => {
-  //   const center = width / (resorts.length + 1);
-  //   return center * (i + 1);
-  // });
-  // const locationsShuffled = shuffle(locations);
-  // resorts = resorts.map((x, i) => {
-  //   const resort = x;
-  //   resort.center = locationsShuffled[i];
-  //   return resort;
-  // });
-  // return resorts;
+function parseResorts(jsonStr: any) {
+  return jsonStr
+    .filter(
+      (r: any) => r.Altitude > 0 && r.Easy && r.Intermediate && r.Difficult
+    )
+    .map(
+      (
+        {
+          Continent: continent = "",
+          Country: country = "",
+          Altitude: altitude = 0,
+          Difficult: hard = 0,
+          Intermediate: intermediate = 0,
+          Easy: easy = 0,
+          ...r
+        }: any,
+        i: number
+      ) => {
+        const name = toTitleCase((r["Resort Name"] ?? "").replace(/-/g, " "));
+        const stateOrProvince = r["State/Province"] ?? "";
+        const searchString = normalize(continent + country + stateOrProvince);
+        const totalKm = hard + intermediate + easy;
+        // specicy minimum difficulty in case of lacking data
+        const difficulty = Math.max(hard / totalKm, 0.1);
+        const averageScore =
+          Object.entries(r)
+            .filter(([key, value]) => RANKING_CRITERIA.includes(key) && value)
+            .flatMap(([, v]) => v as number)
+            .reduce((prev, curr) => prev + curr, 0) / RANKING_CRITERIA.length;
+
+        const score = Math.max(0.1, averageScore);
+        const url = r.URL;
+        const id = i;
+        return {
+          id,
+          name,
+          searchString,
+          continent,
+          country,
+          stateOrProvince,
+          altitude,
+          difficulty,
+          score,
+          url,
+        };
+      }
+    );
 }

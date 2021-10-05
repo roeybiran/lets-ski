@@ -1,36 +1,55 @@
 import type P5 from "p5";
 import p5 from "p5";
-import { useEffect, useRef } from "react";
-import snowflakes from "./snowflakes";
+import { MutableRefObject, useEffect, useRef } from "react";
+import mountains from "../lib/mountains";
+import prepareResortsForRender from "../lib/prepareResortsForRender";
+import snowflakes from "../lib/snowflakes";
 
 // https://github.com/atorov/react-p5js-flocking-boids-demo/blob/master/src/components/P5Wrapper/index.jsx
 
-// function setup() {
-//   createCanvas(500, 500);
-//   triangle(250, 500, 300, 500, 250, 250)
-//   fill('red')
-//   const magicX = 300
-//   const magicY = 500
-//   triangle(250, 400, magicX, magicY, 250, 250)
-// }
+const makeScene = (
+  resorts: Resort[] = [],
+  ref: MutableRefObject<HTMLDivElement | null>
+) => {
+  const scene = (p: P5) => {
+    const width = document.body.clientWidth;
+    const height = p.windowHeight;
+    const maxMountainHeight = (height / 3) * 2;
+    const maxMountainWidth = width / 2;
 
-function Scene(p: P5) {
-  p.setup = () => {
-    p.createCanvas(200, 200);
-  };
-  p.draw = () => {
-    p.circle(10, 10, 10);
-    snowflakes(p);
-  };
-}
+    const renderedResorts = prepareResortsForRender(resorts);
 
-export default function Canvas() {
-  const rootRef = useRef(null);
-  useEffect(() => {
-    const canvas = new p5(Scene, rootRef.current!);
-    return function cleanup() {
-      canvas.remove();
+    p.setup = () => {
+      const cnv = p.createCanvas(width, height);
+      cnv.style("display", "block");
     };
-  }, []);
-  return <div ref={rootRef} />;
+
+    p.windowResized = () => {
+      p.resizeCanvas(width, height);
+    };
+
+    p.draw = () => {
+      // snowflakes(p);
+      mountains(
+        p,
+        renderedResorts,
+        maxMountainWidth,
+        maxMountainHeight,
+        height
+      );
+    };
+  };
+
+  return new p5(scene, ref.current!);
+};
+
+export default function Canvas({ resorts }: { resorts: Resort[] }) {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const scene = makeScene(resorts, rootRef);
+    return function cleanup() {
+      scene.remove();
+    };
+  }, [resorts]);
+  return <div id="canvas-container" ref={rootRef} />;
 }

@@ -1,4 +1,7 @@
 {
+  "files.exclude": {
+    "resorts.*": true,
+  },
   "files.watcherExclude": {
     "resorts.*": true
   },

@@ -1,15 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getResorts from "../../lib/getResorts";
 
-type Data = {
-  name: string;
-};
-
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Resort[]>
 ) {
-  console.log(getResorts());
+  const result = getResorts(req.query.q as string);
+  console.log(result);
 
-  res.status(200).json({ name: "John Doe" });
+  res.status(200).json(result);
 }
