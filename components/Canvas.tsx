@@ -1,9 +1,14 @@
 import type P5 from "p5";
 import p5 from "p5";
 import { MutableRefObject, useEffect, useRef } from "react";
-import mountains from "../lib/mountains";
-import prepareResortsForRender from "../lib/prepareResortsForRender";
-import snowflakes from "../lib/snowflakes";
+import {
+  MAX_MOUNTAIN_HEIGHT_RATIO,
+  MAX_MOUNTAIN_WIDTH_RATIO,
+} from "../constants";
+import animated from "../processing/animations";
+import mountains from "../processing/mountains";
+import prepareResortsForRender from "../processing/prepareResortsForRender";
+import snowflakes from "../processing/snowflakes";
 
 // https://github.com/atorov/react-p5js-flocking-boids-demo/blob/master/src/components/P5Wrapper/index.jsx
 
@@ -12,31 +17,48 @@ const makeScene = (
   ref: MutableRefObject<HTMLDivElement | null>
 ) => {
   const scene = (p: P5) => {
-    const canvasWidth = document.body.clientWidth;
-    const canvasHeight = p.windowHeight;
-    const maxMountainHeight = (canvasHeight / 3) * 2;
-    const maxMountainWidth = canvasWidth / 2;
+    //
+    const getRenderSettings = () => {
+      const canvasWidth = document.documentElement.clientWidth;
+      const canvasHeight = p.windowHeight;
+      const maxMountainHeight = canvasHeight * MAX_MOUNTAIN_HEIGHT_RATIO;
+      const maxMountainWidth = canvasWidth * MAX_MOUNTAIN_WIDTH_RATIO;
 
-    const renderedResorts = prepareResortsForRender({
-      p,
-      resorts,
-      canvasWidth,
-      canvasHeight,
-      maxMountainHeight,
-    });
+      const renderedResorts = prepareResortsForRender({
+        p,
+        resorts,
+        canvasWidth,
+        canvasHeight,
+        maxMountainHeight,
+      });
+
+      return {
+        canvasWidth,
+        canvasHeight,
+        maxMountainHeight,
+        maxMountainWidth,
+        renderedResorts,
+      };
+    };
+
+    let current: ReturnType<typeof getRenderSettings>;
 
     p.setup = () => {
-      const cnv = p.createCanvas(canvasWidth, canvasHeight);
+      current = getRenderSettings();
+      const cnv = p.createCanvas(current.canvasWidth, current.canvasHeight);
       cnv.style("display", "block");
     };
 
     p.windowResized = () => {
-      p.resizeCanvas(canvasWidth, canvasHeight);
+      current = getRenderSettings();
+      p.resizeCanvas(current.canvasWidth, current.canvasHeight);
     };
 
     p.draw = () => {
-      // snowflakes(p);
-      mountains(p, renderedResorts);
+      p.clear();
+      p.noStroke();
+      mountains(p, current.renderedResorts);
+      snowflakes(p);
     };
   };
 
@@ -49,6 +71,7 @@ export default function Canvas({ resorts }: { resorts: Resort[] }) {
     const scene = makeScene(resorts, rootRef);
     return function cleanup() {
       scene.remove();
+      animated.invalidate();
     };
   }, [resorts]);
   return <div id="canvas-container" ref={rootRef} />;

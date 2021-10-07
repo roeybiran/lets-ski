@@ -1,16 +1,18 @@
 import type P5 from "p5";
+import animated from "./animations";
+import { COLOR_SNOWCAP } from "../constants";
 import prepareResortForRender from "./prepareResortsForRender";
-
-const COLOR_SNOWCAP = [255, 255, 255, 204];
-const EASING = 0.1;
 
 export default function mountains(
   p: P5,
   resorts: ReturnType<typeof prepareResortForRender>
 ) {
-  p.noStroke();
   resorts.forEach((r) => {
     //
+    p.translate(
+      0,
+      animated.currentValueFor(`translateY${r.id}`, p.windowHeight, 0)
+    );
 
     ["leftFace", "rightFace"].forEach((__face) => {
       const _face = __face as "leftFace" | "rightFace";

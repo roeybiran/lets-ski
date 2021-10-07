@@ -1,8 +1,7 @@
 import calculateAngleBetween2Lines from "../util/calculateAngleBetween2Lines";
-import type P5 from "p5";
+import { dist, toRadians } from "../processing/utils";
 
 export default function findSnowcapOuterVertexX(
-  p: P5,
   topX: number,
   topY: number,
   innerX: number,
@@ -17,14 +16,14 @@ export default function findSnowcapOuterVertexX(
     [outerX, outerY]
   );
 
-  const innerAngle = p.radians(90);
+  const innerAngle = toRadians(90);
 
   const sinTop = Math.sin(topAngle);
   const sinInner = Math.sin(innerAngle);
   const cosTop = Math.cos(topAngle);
   const cosInner = Math.cos(innerAngle);
 
-  const sideA = p.dist(topX, topY, innerX, snowcapInnerY);
+  const sideA = dist(topX, topY, innerX, snowcapInnerY);
   const sideB = sideA * (sinTop / (sinInner * cosTop + sinTop * cosInner));
   return innerX - sideB;
 }

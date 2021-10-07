@@ -3,8 +3,8 @@ type Resort = {
   name: string;
   continent: string;
   country: string;
-  stateOrProvince: string;
-  searchString: string;
+  // stateOrProvince: string;
+  // searchString: string;
   url: string;
   difficulty: number;
   altitude: number;

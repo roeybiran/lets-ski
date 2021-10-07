@@ -7,8 +7,7 @@ let _snowflakes: Snowflake[] = [];
 // https://p5js.org/examples/simulate-snowflakes.html
 export default function snowflakes(p: P5) {
   // create a random number of snowflakes each frame
-  p.clear();
-  p.noStroke();
+
   const t = p.frameCount / 60; // update time
   for (let i = 0; i < p.random(); i += 1) {
     _snowflakes.push(makeSnowflake(p)); // append snowflake object
