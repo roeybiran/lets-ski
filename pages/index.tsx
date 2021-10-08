@@ -34,44 +34,57 @@ export default function Page({
   }, [debouncedValue, resortsData]);
 
   return (
-    <div>
+    <>
       <Head>
         <title>Let’s Ski!</title>
+        <meta
+          name="description"
+          content="A ski lover’s experiment in creative coding and big data parsing."
+        />
       </Head>
       <main>
-        <div className="bar">
-          <header>
+        <header>
+          <div>
             <h1>Let’s Ski!</h1>
-          </header>
-          <label htmlFor="search-field">
-            Search for ski resorts by country or continent:
-          </label>
-          <input
-            id="search-field"
-            type="search"
-            placeholder="e.g. ”Italy“ or “Val Thorens”"
-            list="resorts"
-            onInput={(evt: ChangeEvent<HTMLInputElement>) => {
-              setQuery(evt.target.value);
-            }}
-          />
-          <datalist id="resorts">
-            {countries.map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </datalist>
-        </div>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <div>
+                <label htmlFor="search-field">
+                  Search for the top 10 ski resorts by country or continent:
+                </label>
+                <input
+                  id="search-field"
+                  type="search"
+                  placeholder="e.g. France, Asia..."
+                  list="resorts"
+                  onInput={(evt: ChangeEvent<HTMLInputElement>) => {
+                    evt.preventDefault();
+                    setQuery(evt.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <input type="checkbox" id="show-details" name="show-details" />
+                <label htmlFor="show-details">Show resorts’ details</label>
+              </div>
+            </form>
+          </div>
+        </header>
         <Canvas resorts={resorts} />
+        <footer className="credit">
+          <p>
+            By <a href="https://github.com/roeybiran">Roey Biran</a> and May
+            Rosner
+          </p>
+        </footer>
       </main>
-      <footer>
-        <p>
-          By <a href="https://github.com/roeybiran">Roey Biran</a> and May
-          Rosner
-        </p>
-      </footer>
-    </div>
+      <datalist id="resorts">
+        {countries.map((country) => (
+          <option key={country} value={country}>
+            {country}
+          </option>
+        ))}
+      </datalist>
+    </>
   );
 }
 

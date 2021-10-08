@@ -19,7 +19,7 @@ const makeScene = (
   const scene = (p: P5) => {
     //
     const getRenderSettings = () => {
-      const canvasWidth = document.documentElement.clientWidth;
+      const canvasWidth = p.windowWidth;
       const canvasHeight = p.windowHeight;
       const maxMountainHeight = canvasHeight * MAX_MOUNTAIN_HEIGHT_RATIO;
       const maxMountainWidth = canvasWidth * MAX_MOUNTAIN_WIDTH_RATIO;
