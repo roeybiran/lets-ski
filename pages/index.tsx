@@ -23,7 +23,7 @@ export default function Page({
     new Set(resortsData.map((r: Resort) => r.country))
   );
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("switzerland");
   const [resorts, setResorts] = useState<Resort[]>([]);
   const [shownDetails, setShownDetails] = useState("");
   const debouncedValue = useDebounce(query, 500);
