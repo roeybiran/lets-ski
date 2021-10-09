@@ -5,8 +5,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import getResorts from "../lib/getResorts";
 import useDebounce from "../util/useDebounce";
 import { MAX_RESORTS_DISPLAY } from "../constants";
+import About from "../components/about";
+import ResortsInfo from "../components/resortsInfo";
+import Header from "../components/header";
 
-const Canvas = dynamic(() => import("../components/Canvas"), { ssr: false });
+const Canvas = dynamic(() => import("../components/canvas"), { ssr: false });
 
 export default function Page({
   resortsData,
@@ -15,17 +18,23 @@ export default function Page({
     new Set(resortsData.map((r: Resort) => r.country))
   );
 
-  const [query, setQuery] = useState("france");
+  const [query, setQuery] = useState("");
   const [resorts, setResorts] = useState<Resort[]>([]);
+  const [shownDetails, setShownDetails] = useState("");
   const debouncedValue = useDebounce(query, 500);
 
   useEffect(() => {
+    console.log("effect");
+
+    if (!debouncedValue) {
+      setResorts([]);
+      return;
+    }
     const results = resortsData
       .filter((x: Resort) => {
-        const _query = debouncedValue.toLowerCase();
         return (
-          _query === x.country.toLowerCase() ||
-          _query === x.continent.toLowerCase()
+          debouncedValue === x.country.toLowerCase() ||
+          debouncedValue === x.continent.toLowerCase()
         );
       })
       .sort((a: Resort, b: Resort) => b.score - a.score)
@@ -43,47 +52,72 @@ export default function Page({
         />
       </Head>
       <main>
-        <header>
+        {/* area1 */}
+        <div className="flow">
+          <header className="center">
+            <Header
+              countries={countries}
+              onInput={(q) => {
+                setQuery(q);
+              }}
+            />
+          </header>
+          {resorts.length === 0 && (
+            <p className="center fadein">
+              {debouncedValue
+                ? "No results! Try a different term."
+                : "Type in the search field to find the top 10 ski resorts, by country or continent…"}
+            </p>
+          )}
+        </div>
+
+        {/* area2 */}
+        <div className="resorts-info">
+          <ResortsInfo
+            resorts={resorts}
+            idToShow={shownDetails}
+            didClose={() => setShownDetails("")}
+          />
+        </div>
+
+        {/* area3 */}
+        <div className="content">
+          <Canvas resorts={resorts} />
+          {/* disclosure buttons */}
           <div>
-            <h1>Let’s Ski!</h1>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label htmlFor="search-field">
-                  Search for the top 10 ski resorts by country or continent:
-                </label>
-                <input
-                  id="search-field"
-                  type="search"
-                  placeholder="e.g. France, Asia..."
-                  list="resorts"
-                  onInput={(evt: ChangeEvent<HTMLInputElement>) => {
-                    evt.preventDefault();
-                    setQuery(evt.target.value);
-                  }}
-                />
-              </div>
-              <div>
-                <input type="checkbox" id="show-details" name="show-details" />
-                <label htmlFor="show-details">Show resorts’ details</label>
-              </div>
-            </form>
+            {resorts.map(({ name, id }, idx) => (
+              <button
+                aria-label="More information"
+                key={name + id}
+                type="button"
+                className="disclosure fadein"
+                id={`resort-button-${name + id}`}
+                onClick={() => {
+                  setShownDetails(String(id));
+                }}
+              >
+                ⓘ
+              </button>
+            ))}
+            <style jsx>{`
+              .disclosure {
+                position: absolute;
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--blue);
+                font-size: 1rem;
+                font-weight: 700;
+                transform: translate(-50%, -150%);
+              }
+            `}</style>
           </div>
-        </header>
-        <Canvas resorts={resorts} />
-        <footer className="credit">
-          <p>
-            By <a href="https://github.com/roeybiran">Roey Biran</a> and May
-            Rosner
-          </p>
-        </footer>
+        </div>
       </main>
-      <datalist id="resorts">
-        {countries.map((country) => (
-          <option key={country} value={country}>
-            {country}
-          </option>
-        ))}
-      </datalist>
+
+      <footer>
+        <About />
+      </footer>
     </>
   );
 }

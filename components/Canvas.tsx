@@ -19,7 +19,7 @@ const makeScene = (
   const scene = (p: P5) => {
     //
     const getRenderSettings = () => {
-      const canvasWidth = p.windowWidth;
+      const canvasWidth = document.documentElement.clientWidth;
       const canvasHeight = p.windowHeight;
       const maxMountainHeight = canvasHeight * MAX_MOUNTAIN_HEIGHT_RATIO;
       const maxMountainWidth = canvasWidth * MAX_MOUNTAIN_WIDTH_RATIO;
@@ -30,6 +30,13 @@ const makeScene = (
         canvasWidth,
         canvasHeight,
         maxMountainHeight,
+      });
+
+      renderedResorts.forEach(({ leftFace, id, name }, index) => {
+        const btn = document.getElementById(`resort-button-${name + id}`)!;
+        btn.style.insetBlockStart = `${leftFace.face.top.y}px`;
+        btn.style.insetInlineStart = `${leftFace.face.top.x}px`;
+        btn.style.animationDelay = `${1 + index / 10}s`;
       });
 
       return {

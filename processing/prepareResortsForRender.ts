@@ -75,9 +75,6 @@ export default function prepareResortForRender({
         const snowcapInnerVertexY =
           canvasHeight - effectiveHeight + effectiveHeight * snowCoverage;
 
-        // console.log(relativeScore, snowCoverage);
-        console.log(effectiveHeight);
-
         const faces = ["leftFace", "rightFace"].map((face) => {
           const _face = {
             outer: {
