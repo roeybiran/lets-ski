@@ -1,6 +1,6 @@
 import type P5 from "p5";
-import animated from "./animations";
 import { COLOR_SNOWCAP } from "../constants";
+import animated from "./animations";
 import prepareResortForRender from "./prepareResortsForRender";
 
 export default function mountains(

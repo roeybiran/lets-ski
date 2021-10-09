@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 
 interface Props {
   countries: string[];
@@ -35,7 +35,7 @@ export default function Header({ countries, onInput }: Props) {
       <style jsx>{`
         .root {
           display: flex;
-          column-gap: 1rem;
+          gap: 0.5rem 1rem;
           flex-wrap: wrap;
           align-items: center;
           justify-content: center;

@@ -1,15 +1,20 @@
-import Head from "next/head";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
-import { ChangeEvent, useEffect, useState } from "react";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import About from "../components/about";
+import Header from "../components/header";
+import ResortsInfo from "../components/resortsInfo";
+import { MAX_RESORTS_DISPLAY } from "../constants";
 import getResorts from "../lib/getResorts";
 import useDebounce from "../util/useDebounce";
-import { MAX_RESORTS_DISPLAY } from "../constants";
-import About from "../components/about";
-import ResortsInfo from "../components/resortsInfo";
-import Header from "../components/header";
 
-const Canvas = dynamic(() => import("../components/canvas"), { ssr: false });
+const MainCanvas = dynamic(() => import("../components/mainCanvas"), {
+  ssr: false,
+});
+const Snowflakes = dynamic(() => import("../components/snowflakes"), {
+  ssr: false,
+});
 
 export default function Page({
   resortsData,
@@ -24,8 +29,6 @@ export default function Page({
   const debouncedValue = useDebounce(query, 500);
 
   useEffect(() => {
-    console.log("effect");
-
     if (!debouncedValue) {
       setResorts([]);
       return;
@@ -51,6 +54,7 @@ export default function Page({
           content="A ski lover’s experiment in creative coding and big data parsing."
         />
       </Head>
+
       <main>
         {/* area1 */}
         <div className="flow">
@@ -72,17 +76,15 @@ export default function Page({
         </div>
 
         {/* area2 */}
-        <div className="resorts-info">
-          <ResortsInfo
-            resorts={resorts}
-            idToShow={shownDetails}
-            didClose={() => setShownDetails("")}
-          />
-        </div>
+        <ResortsInfo
+          resorts={resorts}
+          idToShow={shownDetails}
+          didClose={() => setShownDetails("")}
+        />
 
         {/* area3 */}
-        <div className="content">
-          <Canvas resorts={resorts} />
+        <div>
+          <MainCanvas resorts={resorts} />
           {/* disclosure buttons */}
           <div>
             {resorts.map(({ name, id }, idx) => (
@@ -113,6 +115,8 @@ export default function Page({
             `}</style>
           </div>
         </div>
+
+        <Snowflakes />
       </main>
 
       <footer>

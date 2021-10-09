@@ -1,14 +1,12 @@
-import shuffle from "../util/shuffleArray";
 import type P5 from "p5";
-import findSnowcapOuterVertexX from "./findSnowcapOuterVertexX";
 import {
   COLOR_DIFF_STEP,
   COLOR_LEFT_FACE,
   COLOR_RIGHT_FACE,
-  MAX_SNOW_COVERAGE,
-  SNOWCAP_SLOPE_OFFSET,
   STEEPNESS_FACTOR,
 } from "../constants";
+import shuffle from "../util/shuffleArray";
+import findSnowcapOuterVertexX from "./findSnowcapOuterVertexX";
 
 interface Props {
   p: P5;

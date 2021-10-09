@@ -12,16 +12,14 @@ main {
   background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 }
 
-main > *:first-child {
+main > * {
   grid-area: 1/1;
+}
+
+main > *:first-child {
   justify-self: center;
   text-align: center;
   padding: 1rem;
-}
-
-main > *:nth-child(2),
-main > *:nth-child(3) {
-  grid-area: 1/1;
 }
 
 /* animations */

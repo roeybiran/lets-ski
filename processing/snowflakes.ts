@@ -16,7 +16,7 @@ export default function snowflakes(p: P5) {
   _snowflakes.forEach((flake, idx) => {
     const currentY = flake.update(t); // update snowflake position
     // delete snowflake if past end of screen
-    if (currentY > p.height) {
+    if (currentY > p.windowHeight) {
       _snowflakes.splice(idx, 1);
     } else {
       flake.display(); // draw snowflake

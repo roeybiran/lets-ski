@@ -1,7 +1,7 @@
 // import "normalize.css";
-import "../styles/reset.css";
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import "../styles/globals.css";
+import "../styles/reset.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;

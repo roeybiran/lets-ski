@@ -63,6 +63,7 @@ export default function About() {
         }
 
         p:last-of-type {
+          margin-block-start: 2rem;
           font-size: 0.75em;
           font-style: italic;
         }

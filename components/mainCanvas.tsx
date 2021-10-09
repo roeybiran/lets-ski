@@ -8,7 +8,6 @@ import {
 import animated from "../processing/animations";
 import mountains from "../processing/mountains";
 import prepareResortsForRender from "../processing/prepareResortsForRender";
-import snowflakes from "../processing/snowflakes";
 
 // https://github.com/atorov/react-p5js-flocking-boids-demo/blob/master/src/components/P5Wrapper/index.jsx
 
@@ -65,7 +64,6 @@ const makeScene = (
       p.clear();
       p.noStroke();
       mountains(p, current.renderedResorts);
-      snowflakes(p);
     };
   };
 
@@ -81,5 +79,5 @@ export default function Canvas({ resorts }: { resorts: Resort[] }) {
       animated.invalidate();
     };
   }, [resorts]);
-  return <div id="canvas-container" ref={rootRef} />;
+  return <div ref={rootRef} />;
 }
