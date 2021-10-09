@@ -7,6 +7,7 @@ import Header from "../components/header";
 import ResortsInfo from "../components/resortsInfo";
 import { MAX_RESORTS_DISPLAY } from "../constants";
 import getResorts from "../lib/getResorts";
+import shuffle from "../util/shuffleArray";
 import useDebounce from "../util/useDebounce";
 
 const MainCanvas = dynamic(() => import("../components/mainCanvas"), {
@@ -87,7 +88,7 @@ export default function Page({
           <MainCanvas resorts={resorts} />
           {/* disclosure buttons */}
           <div>
-            {resorts.map(({ name, id }, idx) => (
+            {resorts.map(({ name, id }) => (
               <button
                 aria-label="More information"
                 key={name + id}
