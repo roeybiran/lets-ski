@@ -8,15 +8,16 @@ export default function Snowflakes() {
   useEffect(() => {
     const scene = new p5((p: P5) => {
       p.setup = () => {
-        const cnv = p.createCanvas(
-          document.documentElement.clientWidth,
-          p.windowHeight
-        );
+        const width = document.documentElement.clientWidth;
+        const height = p.windowHeight;
+        const cnv = p.createCanvas(width, height);
         cnv.style("display", "block");
       };
 
       p.windowResized = () => {
-        p.resizeCanvas(document.documentElement.clientWidth, p.windowHeight);
+        const width = document.documentElement.clientWidth;
+        const height = p.windowHeight;
+        p.resizeCanvas(width, height);
       };
 
       p.draw = () => {

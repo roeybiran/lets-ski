@@ -12,7 +12,7 @@ import useDebounce from "../util/useDebounce";
 const MainCanvas = dynamic(() => import("../components/mainCanvas"), {
   ssr: false,
 });
-const Snowflakes = dynamic(() => import("../components/snowflakes"), {
+const Snowflakes = dynamic(() => import("../components/snowflakesCanvas"), {
   ssr: false,
 });
 
@@ -23,27 +23,38 @@ export default function Page({
     new Set(resortsData.map((r: Resort) => r.country))
   );
 
-  const [query, setQuery] = useState("switzerland");
+  const [query, setQuery] = useState("");
   const [resorts, setResorts] = useState<Resort[]>([]);
   const [shownDetails, setShownDetails] = useState("");
   const debouncedValue = useDebounce(query, 500);
 
+  const initialResorts = resortsData.sort(
+    (a: Resort, b: Resort) => b.score - a.score
+  );
+
   useEffect(() => {
+    // reduces jank when scrolling on mobile devices
+    const onTouchMoveListener = (e: Event) => e.preventDefault();
+    document.addEventListener("ontouchmove", onTouchMoveListener);
+    //
+
     if (!debouncedValue) {
       setResorts([]);
       return;
     }
-    const results = resortsData
+    const results = initialResorts
       .filter((x: Resort) => {
         return (
           debouncedValue === x.country.toLowerCase() ||
           debouncedValue === x.continent.toLowerCase()
         );
       })
-      .sort((a: Resort, b: Resort) => b.score - a.score)
       .slice(0, MAX_RESORTS_DISPLAY);
     setResorts(results);
-  }, [debouncedValue, resortsData]);
+    return function cleanup() {
+      document.removeEventListener("ontouchmove", onTouchMoveListener);
+    };
+  }, [debouncedValue, initialResorts]);
 
   return (
     <>
@@ -84,10 +95,16 @@ export default function Page({
 
         {/* area3 */}
         <div>
-          <MainCanvas resorts={resorts} />
+          <MainCanvas
+            resorts={
+              resorts.length > 0
+                ? resorts
+                : initialResorts.slice(0, MAX_RESORTS_DISPLAY)
+            }
+          />
           {/* disclosure buttons */}
           <div>
-            {resorts.map(({ name, id }, idx) => (
+            {resorts.map(({ name, id }) => (
               <button
                 aria-label="More information"
                 key={name + id}

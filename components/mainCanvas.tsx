@@ -1,13 +1,10 @@
 import type P5 from "p5";
 import p5 from "p5";
 import { MutableRefObject, useEffect, useRef } from "react";
-import {
-  MAX_MOUNTAIN_HEIGHT_RATIO,
-  MAX_MOUNTAIN_WIDTH_RATIO,
-} from "../constants";
 import animated from "../processing/animations";
+import calculateResortGeometries from "../processing/calculateResortGeometries";
 import mountains from "../processing/mountains";
-import prepareResortsForRender from "../processing/prepareResortsForRender";
+import prepareResortsForRender from "../processing/calculateResortRanking";
 
 // https://github.com/atorov/react-p5js-flocking-boids-demo/blob/master/src/components/P5Wrapper/index.jsx
 
@@ -17,22 +14,21 @@ const makeScene = (
 ) => {
   const scene = (p: P5) => {
     //
-    const getRenderSettings = () => {
-      const canvasWidth = document.documentElement.clientWidth;
-      const canvasHeight = p.windowHeight;
-      const maxMountainHeight = canvasHeight * MAX_MOUNTAIN_HEIGHT_RATIO;
-      const maxMountainWidth = canvasWidth * MAX_MOUNTAIN_WIDTH_RATIO;
+    let initialResorts = prepareResortsForRender(resorts);
 
-      const renderedResorts = prepareResortsForRender({
-        p,
-        resorts,
+    const refreshRenderSettings = () => {
+      const canvasWidth = document.body.clientWidth;
+      const canvasHeight = p.windowHeight;
+
+      const renderedResorts = calculateResortGeometries({
+        resorts: initialResorts,
         canvasWidth,
         canvasHeight,
-        maxMountainHeight,
       });
 
       renderedResorts.forEach(({ leftFace, id, name }, index) => {
-        const btn = document.getElementById(`resort-button-${name + id}`)!;
+        const btn = document.getElementById(`resort-button-${name + id}`);
+        if (!btn) return;
         btn.style.insetBlockStart = `${leftFace.face.top.y}px`;
         btn.style.insetInlineStart = `${leftFace.face.top.x}px`;
         btn.style.animationDelay = `${1 + index / 10}s`;
@@ -41,22 +37,20 @@ const makeScene = (
       return {
         canvasWidth,
         canvasHeight,
-        maxMountainHeight,
-        maxMountainWidth,
         renderedResorts,
       };
     };
 
-    let current: ReturnType<typeof getRenderSettings>;
+    let current: ReturnType<typeof refreshRenderSettings>;
 
     p.setup = () => {
-      current = getRenderSettings();
+      current = refreshRenderSettings();
       const cnv = p.createCanvas(current.canvasWidth, current.canvasHeight);
       cnv.style("display", "block");
     };
 
     p.windowResized = () => {
-      current = getRenderSettings();
+      current = refreshRenderSettings();
       p.resizeCanvas(current.canvasWidth, current.canvasHeight);
     };
 
@@ -79,5 +73,9 @@ export default function Canvas({ resorts }: { resorts: Resort[] }) {
       animated.invalidate();
     };
   }, [resorts]);
-  return <div ref={rootRef} />;
+  return (
+    <div id="main-canvas-container">
+      <div ref={rootRef} />
+    </div>
+  );
 }
