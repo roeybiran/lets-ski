@@ -32,7 +32,8 @@ const makeScene = (
       });
 
       renderedResorts.forEach(({ leftFace, id, name }, index) => {
-        const btn = document.getElementById(`resort-button-${name + id}`)!;
+        const btn = document.getElementById(`resort-button-${name + id}`);
+        if (!btn) return;
         btn.style.insetBlockStart = `${leftFace.face.top.y}px`;
         btn.style.insetInlineStart = `${leftFace.face.top.x}px`;
         btn.style.animationDelay = `${1 + index / 10}s`;

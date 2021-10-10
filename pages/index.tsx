@@ -29,22 +29,25 @@ export default function Page({
   const [shownDetails, setShownDetails] = useState("");
   const debouncedValue = useDebounce(query, 500);
 
+  const allResorts = resortsData.sort(
+    (a: Resort, b: Resort) => b.score - a.score
+  );
+
   useEffect(() => {
     if (!debouncedValue) {
       setResorts([]);
       return;
     }
-    const results = resortsData
+    const results = allResorts
       .filter((x: Resort) => {
         return (
           debouncedValue === x.country.toLowerCase() ||
           debouncedValue === x.continent.toLowerCase()
         );
       })
-      .sort((a: Resort, b: Resort) => b.score - a.score)
       .slice(0, MAX_RESORTS_DISPLAY);
     setResorts(results);
-  }, [debouncedValue, resortsData]);
+  }, [debouncedValue, allResorts]);
 
   return (
     <>
@@ -85,7 +88,13 @@ export default function Page({
 
         {/* area3 */}
         <div>
-          <MainCanvas resorts={resorts} />
+          <MainCanvas
+            resorts={
+              resorts.length > 0
+                ? resorts
+                : allResorts.slice(0, MAX_RESORTS_DISPLAY)
+            }
+          />
           {/* disclosure buttons */}
           <div>
             {resorts.map(({ name, id }) => (
