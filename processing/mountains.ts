@@ -1,11 +1,11 @@
 import type P5 from "p5";
 import { COLOR_SNOWCAP } from "../constants";
 import animated from "./animations";
-import prepareResortForRender from "./prepareResortsForRender";
+import calculateResortFrames from "./calculateResortFrames";
 
 export default function mountains(
   p: P5,
-  resorts: ReturnType<typeof prepareResortForRender>
+  resorts: ReturnType<typeof calculateResortFrames>
 ) {
   resorts.forEach((r) => {
     //

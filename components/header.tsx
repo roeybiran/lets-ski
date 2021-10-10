@@ -50,6 +50,7 @@ export default function Header({ countries, onInput }: Props) {
           appearance: none;
           border: 1px solid var(--blue);
           border-radius: 8px;
+          font-size: 1rem;
         }
       `}</style>
     </div>

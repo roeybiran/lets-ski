@@ -7,8 +7,8 @@
 /* layout */
 
 main {
+  /* max-height: 100vh; */
   display: grid;
-  height: 100vh;
   background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 }
 
@@ -20,6 +20,10 @@ main > *:first-child {
   justify-self: center;
   text-align: center;
   padding: 1rem;
+}
+
+canvas {
+  overflow: hidden;
 }
 
 /* animations */

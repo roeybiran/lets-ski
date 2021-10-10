@@ -7,7 +7,6 @@ import Header from "../components/header";
 import ResortsInfo from "../components/resortsInfo";
 import { MAX_RESORTS_DISPLAY } from "../constants";
 import getResorts from "../lib/getResorts";
-import shuffle from "../util/shuffleArray";
 import useDebounce from "../util/useDebounce";
 
 const MainCanvas = dynamic(() => import("../components/mainCanvas"), {
@@ -29,16 +28,19 @@ export default function Page({
   const [shownDetails, setShownDetails] = useState("");
   const debouncedValue = useDebounce(query, 500);
 
-  const allResorts = resortsData.sort(
+  const initialResorts = resortsData.sort(
     (a: Resort, b: Resort) => b.score - a.score
   );
 
   useEffect(() => {
+    // reduces jank when scrolling on mobile devices
+    document.addEventListener("ontouchmove", (e) => e.preventDefault());
+
     if (!debouncedValue) {
       setResorts([]);
       return;
     }
-    const results = allResorts
+    const results = initialResorts
       .filter((x: Resort) => {
         return (
           debouncedValue === x.country.toLowerCase() ||
@@ -47,7 +49,7 @@ export default function Page({
       })
       .slice(0, MAX_RESORTS_DISPLAY);
     setResorts(results);
-  }, [debouncedValue, allResorts]);
+  }, [debouncedValue, initialResorts]);
 
   return (
     <>
@@ -92,7 +94,7 @@ export default function Page({
             resorts={
               resorts.length > 0
                 ? resorts
-                : allResorts.slice(0, MAX_RESORTS_DISPLAY)
+                : initialResorts.slice(0, MAX_RESORTS_DISPLAY)
             }
           />
           {/* disclosure buttons */}
