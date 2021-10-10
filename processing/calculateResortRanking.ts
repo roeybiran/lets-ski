@@ -6,7 +6,7 @@ import {
 } from "../constants";
 import shuffle from "../util/shuffleArray";
 
-export default function prepareResortForRender(resorts: Resort[]) {
+export default function calculateResortRanking(resorts: Resort[]) {
   const highestResort = Math.max(...resorts.map((x) => x.altitude));
   const bestScoringResort = Math.max(...resorts.map((x) => x.score));
   const hardestResort = Math.max(...resorts.map((x) => x.difficulty));

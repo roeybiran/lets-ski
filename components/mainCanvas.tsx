@@ -2,9 +2,9 @@ import type P5 from "p5";
 import p5 from "p5";
 import { MutableRefObject, useEffect, useRef } from "react";
 import animated from "../processing/animations";
-import calculateResortFrames from "../processing/calculateResortFrames";
+import calculateResortGeometries from "../processing/calculateResortGeometries";
 import mountains from "../processing/mountains";
-import prepareResortsForRender from "../processing/prepareResortsForRender";
+import prepareResortsForRender from "../processing/calculateResortRanking";
 
 // https://github.com/atorov/react-p5js-flocking-boids-demo/blob/master/src/components/P5Wrapper/index.jsx
 
@@ -20,7 +20,7 @@ const makeScene = (
       const canvasWidth = document.body.clientWidth;
       const canvasHeight = p.windowHeight;
 
-      const renderedResorts = calculateResortFrames({
+      const renderedResorts = calculateResortGeometries({
         resorts: initialResorts,
         canvasWidth,
         canvasHeight,
@@ -47,9 +47,6 @@ const makeScene = (
       current = refreshRenderSettings();
       const cnv = p.createCanvas(current.canvasWidth, current.canvasHeight);
       cnv.style("display", "block");
-      // TODO: bug?
-      // if not called, there's an overflow until the window is manually resized
-      p.windowResized();
     };
 
     p.windowResized = () => {

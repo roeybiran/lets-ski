@@ -1,14 +1,14 @@
 import { MAX_MOUNTAIN_HEIGHT_RATIO } from "../constants";
 import findSnowcapOuterVertexX from "./findSnowcapOuterVertexX";
-import prepareResortForRender from "./prepareResortsForRender";
+import calculateResortRanking from "./calculateResortRanking";
 
 interface Props {
-  resorts: ReturnType<typeof prepareResortForRender>;
+  resorts: ReturnType<typeof calculateResortRanking>;
   canvasHeight: number;
   canvasWidth: number;
 }
 
-export default function calculateResortFrames({
+export default function calculateResortGeometries({
   resorts,
   canvasWidth,
   canvasHeight,

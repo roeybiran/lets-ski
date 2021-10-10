@@ -12,7 +12,7 @@ import useDebounce from "../util/useDebounce";
 const MainCanvas = dynamic(() => import("../components/mainCanvas"), {
   ssr: false,
 });
-const Snowflakes = dynamic(() => import("../components/snowflakes"), {
+const Snowflakes = dynamic(() => import("../components/snowflakesCanvas"), {
   ssr: false,
 });
 
@@ -34,7 +34,9 @@ export default function Page({
 
   useEffect(() => {
     // reduces jank when scrolling on mobile devices
-    document.addEventListener("ontouchmove", (e) => e.preventDefault());
+    const onTouchMoveListener = (e: Event) => e.preventDefault();
+    document.addEventListener("ontouchmove", onTouchMoveListener);
+    //
 
     if (!debouncedValue) {
       setResorts([]);
@@ -49,6 +51,9 @@ export default function Page({
       })
       .slice(0, MAX_RESORTS_DISPLAY);
     setResorts(results);
+    return function cleanup() {
+      document.removeEventListener("ontouchmove", onTouchMoveListener);
+    };
   }, [debouncedValue, initialResorts]);
 
   return (

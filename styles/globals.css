@@ -2,6 +2,9 @@
   font-family: "Fira Sans", sans-serif;
   --blue: #1e40af;
   color: var(--blue);
+
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* layout */
