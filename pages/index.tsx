@@ -2,17 +2,17 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import About from "../components/about";
-import Header from "../components/header";
-import ResortsInfo from "../components/resortsInfo";
+import About from "../components/About";
+import Header from "../components/Header";
+import ResortsInfo from "../components/ResortsInfo";
 import { MAX_RESORTS_DISPLAY } from "../constants";
 import getResorts from "../lib/getResorts";
 import useDebounce from "../util/useDebounce";
 
-const MainCanvas = dynamic(() => import("../components/mainCanvas"), {
+const MainScene = dynamic(() => import("../components/MainScene"), {
   ssr: false,
 });
-const Snowflakes = dynamic(() => import("../components/snowflakesCanvas"), {
+const SnowflakesScene = dynamic(() => import("../components/SnowflakesScene"), {
   ssr: false,
 });
 
@@ -22,11 +22,15 @@ export default function Page({
   const countries: string[] = Array.from(
     new Set(resortsData.map((r: Resort) => r.country))
   );
+  const continents: string[] = Array.from(
+    new Set(resortsData.map((r: Resort) => r.continent))
+  );
 
   const [query, setQuery] = useState("");
   const [resorts, setResorts] = useState<Resort[]>([]);
   const [shownDetails, setShownDetails] = useState("");
-  const debouncedValue = useDebounce(query, 500);
+  // const query = useDebounce(query, 500);
+  // const query = query;
 
   const initialResorts = resortsData.sort(
     (a: Resort, b: Resort) => b.score - a.score
@@ -38,15 +42,15 @@ export default function Page({
     document.addEventListener("ontouchmove", onTouchMoveListener);
     //
 
-    if (!debouncedValue) {
+    if (!query) {
       setResorts([]);
       return;
     }
     const results = initialResorts
       .filter((x: Resort) => {
         return (
-          debouncedValue === x.country.toLowerCase() ||
-          debouncedValue === x.continent.toLowerCase()
+          query === x.country.toLowerCase() ||
+          query === x.continent.toLowerCase()
         );
       })
       .slice(0, MAX_RESORTS_DISPLAY);
@@ -54,7 +58,7 @@ export default function Page({
     return function cleanup() {
       document.removeEventListener("ontouchmove", onTouchMoveListener);
     };
-  }, [debouncedValue, initialResorts]);
+  }, [query, initialResorts]);
 
   return (
     <>
@@ -71,6 +75,7 @@ export default function Page({
         <div className="flow">
           <header className="center">
             <Header
+              continents={continents}
               countries={countries}
               onInput={(q) => {
                 setQuery(q);
@@ -79,7 +84,7 @@ export default function Page({
           </header>
           {resorts.length === 0 && (
             <p className="center fadein">
-              {debouncedValue
+              {query
                 ? "No results! Try a different term."
                 : "Type in the search field to find the top 10 ski resorts, by country or continent…"}
             </p>
@@ -95,7 +100,7 @@ export default function Page({
 
         {/* area3 */}
         <div>
-          <MainCanvas
+          <MainScene
             resorts={
               resorts.length > 0
                 ? resorts
@@ -133,7 +138,7 @@ export default function Page({
           </div>
         </div>
 
-        <Snowflakes />
+        <SnowflakesScene />
       </main>
 
       <footer>

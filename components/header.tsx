@@ -1,19 +1,49 @@
 import { ChangeEvent } from "react";
 
 interface Props {
+  continents: string[];
   countries: string[];
   onInput: (s: string) => void;
 }
 
-export default function Header({ countries, onInput }: Props) {
+const NOOP = "NOOP";
+
+export default function Header({ continents, countries, onInput }: Props) {
   return (
     <div className="root">
       <h1 className="fadein">Let’s Ski!</h1>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <label htmlFor="search-field" className="sr-only">
-          Find the top 10 ski resorts by country or continent:
+      <form>
+        <label htmlFor="areas-list" className="sr-only">
+          Find the top 10 ski resorts by region:
         </label>
-        <input
+
+        <select
+          className="fadein"
+          id="areas-list"
+          name="areas"
+          onChange={(e) => {
+            e.preventDefault();
+            const v: string = e.target.value;
+            onInput(v === NOOP ? "" : v.toLowerCase());
+          }}
+        >
+          <option value={NOOP}>Please choose an area</option>
+          <optgroup label="Continents">
+            {continents.map((x) => (
+              <option key={x} value={x}>
+                {x}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label="Countries">
+            {countries.map((x) => (
+              <option key={x} value={x}>
+                {x}
+              </option>
+            ))}
+          </optgroup>
+        </select>
+        {/* <input
           className="fadein"
           id="search-field"
           type="search"
@@ -26,11 +56,9 @@ export default function Header({ countries, onInput }: Props) {
         />
         <datalist id="resort-countries-list">
           {countries.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
+            <option key={country} value={country} />
           ))}
-        </datalist>
+        </datalist> */}
       </form>
       <style jsx>{`
         .root {

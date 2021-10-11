@@ -10,7 +10,6 @@
 /* layout */
 
 main {
-  /* max-height: 100vh; */
   display: grid;
   background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 }

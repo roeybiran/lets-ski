@@ -1,3 +1,5 @@
+const MYURL = "https://roeybiran.com";
+
 export default function About() {
   return (
     <>
@@ -7,22 +9,27 @@ export default function About() {
           <ul className="flow-s">
             <li>
               Searching for a country or continent yields the top 10 ski resorts
-              in that area. This score is based on multiple criteria, like snow
-              quality and accommodation offerings.
+              in that area. The score is based on multiple criteria, like the
+              quality of the snow and accommodations.
+            </li>
+            <li>A higher scoring resort will have a bigger snowcap.</li>
+            <li>
+              Resorts with greater average altitudes are represented by a higher
+              mountain.
             </li>
             <li>
-              Resorts with a greater average altitudes are represented by a
-              higher mountain.
+              Resorts with a greater average difficulty appear steeper. This is
+              calculated by combining the lengths of slopes adequate to advanced
+              skiers only, and expressing that as a fraction of the total ski
+              area.
             </li>
-            <li>Resorts with greater average difficulty appear steeper.</li>
-            <li>A higher scoring resort will have a bigger snowcap.</li>
           </ul>
         </section>
         <section className="flow">
           <h2>About</h2>
           <div className="flow-s">
             <p>
-              “Let’s Ski” originated as a university assignment in a creative
+              The project originated as a university assignment in a creative
               coding class, where the objective was to present big data in an
               enticing way, using{" "}
               <a href="https://processing.org">Processing</a>.
@@ -36,12 +43,11 @@ export default function About() {
               we’re both ski lovers.
             </p>
             <p>
-              This porject was built with <a href="https://p5js.org">p5.js</a>{" "}
-              and <a href="https://nextjs.org">Next.js</a>.
+              Built with <a href="https://p5js.org">p5.js</a> and{" "}
+              <a href="https://nextjs.org">Next.js</a>.
             </p>
             <p>
-              By <a href="https://github.com/roeybiran">Roey Biran</a> and May
-              Rosner
+              By <a href={MYURL}>Roey Biran</a>
             </p>
           </div>
         </section>
