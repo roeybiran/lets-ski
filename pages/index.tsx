@@ -7,7 +7,6 @@ import Header from "../components/Header";
 import ResortsInfo from "../components/ResortsInfo";
 import { MAX_RESORTS_DISPLAY } from "../constants";
 import getResorts from "../lib/getResorts";
-import useDebounce from "../util/useDebounce";
 
 const MainScene = dynamic(() => import("../components/MainScene"), {
   ssr: false,
