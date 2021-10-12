@@ -28,8 +28,6 @@ export default function Page({
   const [query, setQuery] = useState("");
   const [resorts, setResorts] = useState<Resort[]>([]);
   const [shownDetails, setShownDetails] = useState("");
-  // const query = useDebounce(query, 500);
-  // const query = query;
 
   const initialResorts = resortsData.sort(
     (a: Resort, b: Resort) => b.score - a.score
