@@ -23,11 +23,15 @@ const SnowflakesScene = dynamic(() => import("../components/SnowflakesScene"), {
 export default function Page({
   resortsData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const countries: string[] = Array.from(
-    new Set(resortsData.map((r: Resort) => r.country))
-  );
-  const continents: string[] = Array.from(
-    new Set(resortsData.map((r: Resort) => r.continent))
+  const regions = Array.from(
+    new Set(
+      (resortsData as Resort[])
+        .reduce<string[]>(
+          (prev, curr) => prev.concat(curr.continent, curr.country),
+          []
+        )
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }))
+    )
   );
 
   const [query, setQuery] = useState("");
@@ -81,8 +85,7 @@ export default function Page({
         <div className="flow">
           <header className="center">
             <Header
-              continents={continents}
-              countries={countries}
+              regions={regions}
               onInput={(q) => {
                 setQuery(q);
               }}

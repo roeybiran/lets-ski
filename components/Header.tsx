@@ -1,12 +1,11 @@
 interface Props {
-  continents: string[];
-  countries: string[];
+  regions: string[];
   onInput: (s: string) => void;
 }
 
 const NOOP = "NOOP";
 
-export default function Header({ continents, countries, onInput }: Props) {
+export default function Header({ regions, onInput }: Props) {
   return (
     <div className="root">
       <h1 className="fadein">Let’s Ski!</h1>
@@ -25,13 +24,8 @@ export default function Header({ continents, countries, onInput }: Props) {
             onInput(v === NOOP ? "" : v.toLowerCase());
           }}
         >
-          <option value={NOOP}>Please choose an area</option>
-          {continents.map((x) => (
-            <option key={x} value={x}>
-              {x}
-            </option>
-          ))}
-          {countries.map((x) => (
+          <option value={NOOP}>Please choose a region</option>
+          {regions.map((x) => (
             <option key={x} value={x}>
               {x}
             </option>
