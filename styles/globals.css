@@ -1,14 +1,3 @@
-html {
-  /* https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/ */
-  height: -webkit-fill-available;
-}
-
-body {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  overflow-x: hidden;
-}
-
 :root {
   font-family: "Fira Sans", sans-serif;
   --blue: #1e40af;
@@ -23,7 +12,9 @@ body {
 main {
   display: grid;
   background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
+  /* https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/ */
   min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 main > * {
