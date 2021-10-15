@@ -1,11 +1,3 @@
-html {
-  height: 100%;
-}
-
-body {
-  min-height: 100%;
-}
-
 :root {
   font-family: "Fira Sans", sans-serif;
   --blue: #1e40af;
@@ -20,6 +12,9 @@ body {
 main {
   display: grid;
   background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
+  /* https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/ */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 main > * {
