@@ -14,7 +14,7 @@ main {
   background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
   /* https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/ */
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  /* min-height: -webkit-fill-available; */
 }
 
 main > * {
