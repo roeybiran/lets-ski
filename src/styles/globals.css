@@ -2,23 +2,12 @@
 	font-family: 'Fira Sans', sans-serif;
 	--blue: #1e40af;
 	color: var(--blue);
-
 	overflow-x: hidden;
 	overflow-y: auto;
 }
 
-/* :root,
-html,
-body,
-#__next {
-	block-size: 100%;
-} */
-
-body {
-	background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
-}
-
 main {
+	background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
 	display: grid;
 }
 
