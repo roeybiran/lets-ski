@@ -1,0 +1,91 @@
+:root {
+	font-family: 'Fira Sans', sans-serif;
+	--blue: #1e40af;
+	color: var(--blue);
+
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/* :root,
+html,
+body,
+#__next {
+	block-size: 100%;
+} */
+
+body {
+	background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
+}
+
+main {
+	display: grid;
+}
+
+main > * {
+	grid-area: 1/1;
+}
+
+main > *:first-child {
+	justify-self: center;
+	text-align: center;
+	padding: 1rem;
+}
+
+canvas {
+	overflow: hidden;
+}
+
+/* animations */
+
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.fadein {
+	animation: 0.8s ease 0s 1 normal both running fadein;
+}
+
+/* utilities */
+
+.center {
+	box-sizing: content-box;
+	margin-inline: auto;
+	padding-inline: 1rem;
+}
+
+.flow > * + * {
+	margin-block-start: 1rem;
+}
+
+.flow-s > * + * {
+	margin-block-start: 0.5rem;
+}
+
+/* https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html */
+.sr-only:not(:focus):not(:active) {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.disclosure {
+	position: absolute;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--blue);
+	font-size: 1rem;
+	font-weight: 700;
+	transform: translate(-50%, -150%);
+}
