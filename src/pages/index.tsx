@@ -69,7 +69,6 @@ export default function Page({
 					idToShow={shownDetails}
 					didClose={() => setShownDetails('')}
 				/>
-				<Snowflakes />
 				<Mountains
 					resorts={shownResorts.length ? shownResorts : initialResorts}
 				/>
@@ -87,6 +86,7 @@ export default function Page({
 						ⓘ
 					</button>
 				))}
+				<Snowflakes />
 			</div>
 			<Footer />
 		</>
