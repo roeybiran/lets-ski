@@ -21,7 +21,7 @@ export default function Page({
 	resorts,
 	initialResorts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-	const [shownResorts, setShownResorts] = useState<Resort[]>(initialResorts);
+	const [shownResorts, setShownResorts] = useState<Resort[]>([]);
 	const [shownDetails, setShownDetails] = useState('');
 	return (
 		<>
@@ -70,7 +70,9 @@ export default function Page({
 					didClose={() => setShownDetails('')}
 				/>
 				<Snowflakes />
-				<Mountains resorts={shownResorts} />
+				<Mountains
+					resorts={shownResorts.length ? shownResorts : initialResorts}
+				/>
 				{shownResorts.map(({ name, id }) => (
 					<button
 						aria-label="More information"
