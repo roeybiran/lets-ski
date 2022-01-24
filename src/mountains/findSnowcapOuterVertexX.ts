@@ -1,5 +1,5 @@
 import { dist, toRadians } from '../util';
-import calculateAngleBetween2Lines from '../util/calculateAngleBetween2Lines';
+import calculateAngleBetween2Lines from './calculateAngleBetween2Lines';
 
 export default function findSnowcapOuterVertexX(
 	topX: number,

@@ -16,8 +16,8 @@ const makeScene = (
 		let initialResorts = prepareResortsForRender(resorts);
 
 		const refreshRenderSettings = () => {
-			const canvasWidth = document.documentElement.clientWidth;
-			const canvasHeight = document.documentElement.clientHeight;
+			const canvasWidth = p.windowWidth;
+			const canvasHeight = p.windowHeight;
 
 			const renderedResorts = calculateResortGeometries({
 				resorts: initialResorts,
@@ -46,6 +46,8 @@ const makeScene = (
 			current = refreshRenderSettings();
 			const cnv = p.createCanvas(current.canvasWidth, current.canvasHeight);
 			cnv.style('display', 'block');
+			cnv.style('inline-size', '100%');
+			cnv.style('block-size', '100%');
 		};
 
 		p.windowResized = () => {
@@ -72,9 +74,5 @@ export default function Canvas({ resorts }: { resorts: Resort[] }) {
 			animated.invalidate();
 		};
 	}, [resorts]);
-	return (
-		<div id="main-canvas-container">
-			<div ref={rootRef} />
-		</div>
-	);
+	return <div id="mountains" ref={rootRef} />;
 }

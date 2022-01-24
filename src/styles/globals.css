@@ -6,26 +6,33 @@
 	overflow-y: auto;
 }
 
-main {
-	background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
-	display: grid;
-}
-
-main > * {
-	grid-area: 1/1;
-}
-
-main > *:first-child {
-	justify-self: center;
-	text-align: center;
-	padding: 1rem;
+/* https://www.bram.us/2021/07/08/the-large-small-and-dynamic-viewports/#but-why */
+@supports (-webkit-touch-callout: none) {
+	body {
+		block-size: -webkit-fill-available;
+	}
 }
 
 canvas {
 	overflow: hidden;
+	pointer-events: none;
 }
 
-/* animations */
+#snowflakes,
+#mountains {
+	/* z-index: 0; */
+}
+
+.disclosure {
+	position: absolute;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--blue);
+	font-size: 1rem;
+	font-weight: 700;
+	transform: translate(-50%, -150%);
+}
 
 @keyframes fadein {
 	from {
@@ -41,7 +48,78 @@ canvas {
 	animation: 0.8s ease 0s 1 normal both running fadein;
 }
 
-/* utilities */
+@keyframes shake-x {
+	0%,
+	100% {
+		transform: translateX(0%);
+	}
+	20% {
+		transform: translateX(-5%);
+	}
+	40% {
+		transform: translateX(5%);
+	}
+	60% {
+		transform: translateX(-5%);
+	}
+	80% {
+		transform: translateX(5%);
+	}
+}
+
+.shake {
+	animation: shake-x 0.75s ease 0s;
+}
+
+#above-fold {
+	block-size: 100vh;
+	background: linear-gradient(#a1c4fd, #c2e9fb) no-repeat;
+	display: grid;
+	grid-template-areas: 'main';
+	position: relative;
+}
+
+#above-fold > * {
+	grid-area: main;
+}
+
+#top-bar {
+	display: flex;
+	gap: 0.5rem 1rem;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	padding-block: 1rem;
+}
+
+#top-bar h1 {
+	font-size: 1.5rem;
+	font-style: italic;
+}
+
+.site-footer {
+	max-width: 60ch;
+	background-color: white;
+	padding-block: 2rem;
+}
+
+.site-footer section + section {
+	margin-top: 2rem;
+}
+
+.site-footer ul {
+	padding-inline-start: 1rem;
+	list-style-type: disc;
+}
+
+.site-footer p:last-of-type {
+	margin-block-start: 2rem;
+	font-size: 0.75em;
+}
+
+.site-footer h2 {
+	font-weight: 700;
+}
 
 .center {
 	box-sizing: content-box;
@@ -57,7 +135,46 @@ canvas {
 	margin-block-start: 0.5rem;
 }
 
-/* https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html */
+.resorts-info-list {
+	display: grid;
+	grid-template-areas: 'main';
+	align-items: flex-end;
+	justify-items: center;
+}
+
+.resorts-info-list > * {
+	z-index: 1;
+	grid-area: main;
+}
+
+.metabox {
+	border: 1px solid blue;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background-color: white;
+	padding: 1rem;
+	max-inline-size: min(30ch, 100%);
+	margin-inline: auto;
+}
+
+.metabox dl .grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	column-gap: 1rem;
+}
+
+.metabox .grid dt {
+	font-weight: 700;
+}
+
+.metabox > dl > div:first-child dd:first-of-type {
+	font-weight: 700;
+}
+
+.metabox dt::after {
+	content: ': ';
+}
+
 .sr-only:not(:focus):not(:active) {
 	clip: rect(0 0 0 0);
 	clip-path: inset(50%);
@@ -66,15 +183,4 @@ canvas {
 	position: absolute;
 	white-space: nowrap;
 	width: 1px;
-}
-
-.disclosure {
-	position: absolute;
-	background: none;
-	border: none;
-	cursor: pointer;
-	color: var(--blue);
-	font-size: 1rem;
-	font-weight: 700;
-	transform: translate(-50%, -150%);
 }

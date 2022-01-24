@@ -6,10 +6,15 @@ import snowflakes from './snowflakes';
 export default function Snowflakes() {
 	const rootRef = useRef<HTMLDivElement | null>(null);
 	useEffect(() => {
+		const matcher = window.matchMedia('(prefers-reduced-motion: reduce)');
+		// matcher.addEventListener('change', () => {})
+		if (matcher.matches) {
+			return;
+		}
 		const scene = new p5((p: P5) => {
 			p.setup = () => {
-				const width = document.documentElement.clientWidth;
-				const height = document.documentElement.clientHeight;
+				const width = p.windowWidth;
+				const height = p.windowHeight;
 				const cnv = p.createCanvas(width, height);
 				cnv.style('display', 'block');
 			};
@@ -31,5 +36,5 @@ export default function Snowflakes() {
 			scene.remove();
 		};
 	}, []);
-	return <div ref={rootRef} />;
+	return <div id="snowflakes" ref={rootRef} />;
 }

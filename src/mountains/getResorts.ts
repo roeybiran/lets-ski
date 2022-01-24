@@ -1,16 +1,66 @@
 import fs from 'fs';
 import path from 'path';
-import { RANKING_CRITERIA } from '../constants';
 
-let parsedResorts: Resort[] = [];
+const RANKING_CRITERIA = [
+	'Ski resort size',
+	'Slope offering, variety of runs',
+	'Lifts and cable cars',
+	'Snow reliability',
+	'Slope preparation',
+	'Access, on-site parking',
+	'Orientation (trail map, information boards, sign-postings)',
+	'Cleanliness and hygiene',
+	'Environmentally friendly ski operation',
+	'Friendliness of staff',
+	'Mountain restaurants/ski huts/gastronomy',
+	'Après-ski',
+	'Accommodation offering directly at the slopes and lifts',
+	'Families and children',
+	'Beginners',
+	'Advanced skiers/freeriders',
+	'Snow parks',
+	'Cross-country skiing and trails',
+];
+
+type Cache = {
+	regions: string[];
+	resorts: Resort[];
+	initialResorts: Resort[];
+};
+
+let cache: Cache = {
+	regions: [],
+	resorts: [],
+	initialResorts: [],
+};
 
 export default function getResorts() {
-	if (parsedResorts.length === 0) {
-		parsedResorts = parseResorts(
+	if (!cache.regions.length || !cache.resorts.length) {
+		const resorts = parseResorts(
 			fs.readFileSync(path.join(process.cwd(), 'db', 'resorts.json'), 'utf-8')
+		).sort((a: Resort, b: Resort) => b.score - a.score);
+
+		const regions = Array.from(
+			new Set(
+				resorts
+					.map(({ country, continent }) => [country, continent])
+					.reduce((prev, curr) => prev.concat(curr))
+					.sort((a, b) =>
+						a.localeCompare(b, undefined, { sensitivity: 'base' })
+					)
+			)
 		);
+
+		cache.initialResorts = resorts.slice(0, 10);
+		cache.resorts = resorts;
+		cache.regions = regions;
 	}
-	return parsedResorts;
+
+	return {
+		regions: cache.regions,
+		resorts: cache.resorts,
+		initialResorts: cache.initialResorts,
+	};
 }
 
 function parseResorts(jsonString: string) {

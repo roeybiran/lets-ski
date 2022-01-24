@@ -1,130 +1,98 @@
-import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import { InferGetStaticPropsType } from 'next';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import About from '../About';
-import Header from '../Header';
-import ResortsInfo from '../mountains/ResortsInfo';
-import { MAX_RESORTS_DISPLAY } from '../constants';
+import { useState } from 'react';
+import Footer from '../common/Footer';
+import ResortInfoList from '../common/ResortInfoList';
 import getResorts from '../mountains/getResorts';
 
-const MainScene = dynamic(() => import('../mountains'), {
+const Mountains = dynamic(() => import('../mountains'), {
 	ssr: false,
 });
 
-const SnowflakesScene = dynamic(() => import('../snowflakes'), {
+const Snowflakes = dynamic(() => import('../snowflakes'), {
 	ssr: false,
 });
 
-const siteName = 'Let’s Ski!';
-const description =
-	'A ski lover’s experiment in creative coding and big data parsing.';
-const url = 'https://lets-ski.roeybiran.com';
+const placeholderValue = 'Please choose a region';
+const MAX_RESORTS_DISPLAY = 10;
 
 export default function Page({
-	resortsData,
+	regions,
+	resorts,
+	initialResorts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-	const regions = Array.from(
-		new Set(
-			(resortsData as Resort[])
-				.reduce<string[]>(
-					(prev, curr) => prev.concat(curr.continent, curr.country),
-					[]
-				)
-				.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
-		)
-	);
-
-	const [query, setQuery] = useState('');
-	const [resorts, setResorts] = useState<Resort[]>([]);
+	const [shownResorts, setShownResorts] = useState<Resort[]>(initialResorts);
 	const [shownDetails, setShownDetails] = useState('');
-
-	const initialResorts = resortsData.sort(
-		(a: Resort, b: Resort) => b.score - a.score
-	);
-
-	useEffect(() => {
-		if (!query) {
-			setResorts([]);
-			return;
-		}
-		const results = initialResorts
-			.filter((x: Resort) => {
-				return (
-					query === x.country.toLowerCase() ||
-					query === x.continent.toLowerCase()
-				);
-			})
-			.slice(0, MAX_RESORTS_DISPLAY);
-		setResorts(results);
-	}, [query, initialResorts]);
-
 	return (
 		<>
-			<Head>
-				<title>{siteName}</title>
-				<meta name="description" content={description} />
-				<meta property="og:title" content={siteName} />
-				<meta property="og:description" content={description} />
-				<meta property="og:image" content={url} />
-				<meta property="og:url" content={`${url}/og.jpg`} />
-				<meta name="twitter:card" content="summary_large_image" />
-				<meta property="og:site_name" content={siteName} />
-				<meta name="twitter:image:alt" content="Snowcapped mountains" />
-			</Head>
-
-			<main>
-				{/* area1 */}
-				<div className="flow">
-					<header className="center">
-						<Header
-							regions={regions}
-							onInput={(q) => {
-								setQuery(q);
-							}}
-						/>
-					</header>
+			<div id="above-fold">
+				<div>
+					<div id="top-bar">
+						<header>
+							<h1 className="fadein">Let’s Ski!</h1>
+						</header>
+						<form>
+							<label htmlFor="areas-list" className="sr-only">
+								Find the top 10 ski resorts by region:
+							</label>
+							<select
+								className="fadein"
+								id="areas-list"
+								name="areas"
+								onChange={(e) => {
+									e.preventDefault();
+									const val: string = e.target.value.toLowerCase();
+									if (val === placeholderValue.toLowerCase()) {
+										return;
+									}
+									const results = resorts
+										.filter(
+											(x) =>
+												val === x.country.toLowerCase() ||
+												val === x.continent.toLowerCase()
+										)
+										.slice(0, MAX_RESORTS_DISPLAY);
+									setShownResorts(results);
+								}}
+							>
+								{[placeholderValue].concat(regions).map((x) => (
+									<option key={x} value={x}>
+										{x}
+									</option>
+								))}
+							</select>
+						</form>
+					</div>
 				</div>
-
-				{/* area2 */}
-				<ResortsInfo
-					resorts={resorts}
+				<ResortInfoList
+					resorts={shownResorts}
 					idToShow={shownDetails}
 					didClose={() => setShownDetails('')}
 				/>
-
-				{/* area3 */}
-				<div>
-					<MainScene resorts={initialResorts.slice(0, MAX_RESORTS_DISPLAY)} />
-					{/* disclosure buttons */}
-					<div>
-						{resorts.map(({ name, id }) => (
-							<button
-								aria-label="More information"
-								key={name + id}
-								type="button"
-								className="disclosure fadein"
-								id={`resort-button-${name + id}`}
-								onClick={() => {
-									setShownDetails(String(id));
-								}}
-							>
-								ⓘ
-							</button>
-						))}
-					</div>
-				</div>
-
-				<SnowflakesScene />
-			</main>
-
-			<footer>
-				<About />
-			</footer>
+				<Snowflakes />
+				<Mountains resorts={shownResorts} />
+				{shownResorts.map(({ name, id }) => (
+					<button
+						aria-label="More information"
+						key={name + id}
+						type="button"
+						className="disclosure fadein"
+						id={`resort-button-${name + id}`}
+						onClick={() => {
+							setShownDetails(String(id));
+						}}
+					>
+						ⓘ
+					</button>
+				))}
+			</div>
+			<Footer />
 		</>
 	);
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-	return { props: { resortsData: getResorts() } };
+export const getStaticProps = async () => {
+	return {
+		props: getResorts(),
+	};
 };
