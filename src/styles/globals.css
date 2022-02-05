@@ -18,11 +18,6 @@ canvas {
 	pointer-events: none;
 }
 
-#snowflakes,
-#mountains {
-	/* z-index: 0; */
-}
-
 .disclosure {
 	position: absolute;
 	background: none;

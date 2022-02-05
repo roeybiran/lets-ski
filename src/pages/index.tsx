@@ -74,8 +74,8 @@ export default function Page({
 				/>
 				{shownResorts.map(({ name, id }) => (
 					<button
-						aria-label="More information"
 						key={name + id}
+						aria-label="More information"
 						type="button"
 						className="disclosure fadein"
 						id={`resort-button-${name + id}`}
