@@ -1,6 +1,6 @@
 {
   "files.exclude": {
-    "**/resorts.json": true
+    "db/**": true
   },
   "files.watcherExclude": {
     "**/resorts.json": true
